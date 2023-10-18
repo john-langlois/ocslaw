@@ -615,7 +615,7 @@ section {
 # Icon Boxes
 --------------------------------------------------------------*/
 .icon-boxes {
-  padding-top: 0;
+  padding-top: 50px;
   position: relative;
   z-index: 100;
 }
