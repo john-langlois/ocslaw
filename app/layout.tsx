@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { GoogleTagManager } from "@/components/google-tag-manager";
 import "./globals.css";
 
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <GoogleTagManager />
         {children}
+        <Analytics />
       </body>
     </html>
   );
