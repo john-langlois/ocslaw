@@ -163,7 +163,7 @@ code, .mono {
 .cf-header.on-light { background: var(--ink); }
 .cf-header.is-scrolled { background: rgba(16,15,13,.55); backdrop-filter: blur(12px); }
 .cf-header.on-light.is-scrolled { background: var(--ink); backdrop-filter: none; }
-.cf-header-inner { max-width: 1120px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; gap: 24px; }
+.cf-header-inner { max-width: 1120px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; gap: 24px; position: relative; z-index: 41; }
 .cf-logo { font-family: var(--font-display); font-size: 24px; letter-spacing: -.02em; color: var(--cream); text-decoration: none; }
 .cf-nav { display: flex; gap: 28px; margin-left: 40px; }
 .cf-nav-link { font-family: var(--font-body); font-size: 14px; color: var(--cream); text-decoration: none; opacity: .82; transition: opacity .2s; }
@@ -222,26 +222,36 @@ code, .mono {
 .cf-nav-mobile-toggle {
   display: none;
   flex: none;
+  position: relative;
+  z-index: 42;
   width: 44px;
   height: 44px;
   margin-left: auto;
   padding: 0;
-  border: 1px solid rgba(250, 250, 249, 0.2);
+  border: 1px solid rgba(250, 250, 249, 0.35);
   border-radius: 999px;
-  background: transparent;
+  background: rgba(250, 250, 249, 0.08);
+  color: var(--cream);
   cursor: pointer;
   align-items: center;
   justify-content: center;
   gap: 6px;
   flex-direction: column;
+  transition: background .2s var(--ease), border-color .2s var(--ease);
 }
 .cf-nav-mobile-toggle span {
   display: block;
   width: 18px;
   height: 1.5px;
-  background: var(--cream);
-  transition: transform .25s var(--ease), opacity .2s var(--ease);
+  background: currentColor;
+  transition: transform .25s var(--ease), opacity .2s var(--ease), background .2s var(--ease);
 }
+.cf-nav-mobile-toggle.is-open {
+  background: var(--cream);
+  border-color: var(--cream);
+  color: var(--ink);
+}
+.cf-nav-mobile-toggle.is-open span { background: currentColor; }
 .cf-nav-mobile-toggle.is-open span:first-child { transform: translateY(3.75px) rotate(45deg); }
 .cf-nav-mobile-toggle.is-open span:last-child { transform: translateY(-3.75px) rotate(-45deg); }
 
