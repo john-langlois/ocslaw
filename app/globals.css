@@ -256,20 +256,30 @@ code, .mono {
 .cf-nav-mobile-toggle.is-open span:last-child { transform: translateY(-3.75px) rotate(-45deg); }
 
 .cf-nav-mobile {
+  --menu-duration: 0.42s;
+  --menu-ease: cubic-bezier(0.22, 1, 0.36, 1);
   position: fixed;
   inset: 0;
   z-index: 39;
   background: var(--ink);
   padding: 88px 24px 32px;
-  opacity: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transform: translate3d(0, -100%, 0);
   visibility: hidden;
   pointer-events: none;
-  transition: opacity .25s var(--ease), visibility .25s;
+  will-change: transform;
+  transition:
+    transform var(--menu-duration) var(--menu-ease),
+    visibility 0s linear var(--menu-duration);
 }
 .cf-nav-mobile.is-open {
-  opacity: 1;
+  transform: translate3d(0, 0, 0);
   visibility: visible;
   pointer-events: auto;
+  transition:
+    transform var(--menu-duration) var(--menu-ease),
+    visibility 0s;
 }
 .cf-nav-mobile-inner {
   max-width: 1120px;
@@ -277,6 +287,20 @@ code, .mono {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  opacity: 0;
+  transform: translate3d(0, -12px, 0);
+  transition:
+    opacity 0.28s ease,
+    transform 0.32s var(--menu-ease);
+}
+.cf-nav-mobile.is-open .cf-nav-mobile-inner {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 0.08s;
+}
+.cf-nav-mobile:not(.is-open) .cf-nav-mobile-inner {
+  transition-delay: 0s;
+  transition-duration: 0.12s;
 }
 .cf-nav-mobile-link {
   display: block;
@@ -623,6 +647,12 @@ html, body { margin: 0; background: var(--ink-deep); }
 @media (prefers-reduced-motion: reduce) {
   .ocs3-hero-line > span { animation: none; transform: none; }
   .ocs3-hero-foot { animation: none; opacity: 1; }
+  .cf-nav-mobile,
+  .cf-nav-mobile-inner {
+    transition: none;
+    transform: none;
+    opacity: 1;
+  }
 }
 
 @media (max-width: 1020px) {

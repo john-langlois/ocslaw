@@ -31,9 +31,17 @@ export function OCSHeader() {
   }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    const scroller = document.querySelector(".kit-scroll") as HTMLElement | null;
+    if (!scroller) return;
+
+    if (mobileOpen) {
+      scroller.style.overflow = "hidden";
+    } else {
+      scroller.style.overflow = "";
+    }
+
     return () => {
-      document.body.style.overflow = "";
+      scroller.style.overflow = "";
     };
   }, [mobileOpen]);
 
