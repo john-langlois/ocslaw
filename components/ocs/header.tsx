@@ -11,6 +11,7 @@ export function OCSHeader() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const onLightPage = pathname !== "/";
@@ -25,6 +26,18 @@ export function OCSHeader() {
   }, []);
 
   useEffect(() => {
+    setMobileOpen(false);
+    setServicesOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
     const onClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setServicesOpen(false);
@@ -34,15 +47,23 @@ export function OCSHeader() {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
+  const closeMobile = () => setMobileOpen(false);
+
+  const handleConsult = () => {
+    closeMobile();
+    consult();
+  };
+
   return (
     <header
-      className={`cf-header${onLightPage ? " on-light" : ""}${scrolled ? " is-scrolled" : ""}`}
+      className={`cf-header${onLightPage ? " on-light" : ""}${scrolled || mobileOpen ? " is-scrolled" : ""}${mobileOpen ? " menu-open" : ""}`}
     >
       <div className="cf-header-inner">
-        <Link className="cf-logo" href="/">
+        <Link className="cf-logo" href="/" onClick={closeMobile}>
           OCS Law
         </Link>
-        <nav className="cf-nav">
+
+        <nav className="cf-nav" aria-label="Main">
           {NAV_ITEMS.map((n) => (
             <Link key={n.label} className="cf-nav-link" href={n.href}>
               {n.label}
@@ -95,13 +116,49 @@ export function OCSHeader() {
             </div>
           </div>
         </nav>
-        <Link className="cf-nav-link cf-nav-services-mobile" href="/#services">
-          Services
-        </Link>
-        <button className="cf-btn cf-btn-cream" onClick={() => consult()}>
+
+        <button className="cf-btn cf-btn-cream cf-header-cta" onClick={() => consult()}>
           Book a consultation
         </button>
+
+        <button
+          type="button"
+          className={`cf-nav-mobile-toggle${mobileOpen ? " is-open" : ""}`}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          onClick={() => setMobileOpen((v) => !v)}
+        >
+          <span />
+          <span />
+        </button>
       </div>
+
+      <nav
+        id="mobile-nav"
+        className={`cf-nav-mobile${mobileOpen ? " is-open" : ""}`}
+        aria-label="Mobile"
+        aria-hidden={!mobileOpen}
+      >
+        <div className="cf-nav-mobile-inner">
+          {NAV_ITEMS.map((n) => (
+            <Link
+              key={n.label}
+              className="cf-nav-mobile-link"
+              href={n.href}
+              onClick={closeMobile}
+            >
+              {n.label}
+            </Link>
+          ))}
+          <Link className="cf-nav-mobile-link" href="/#services" onClick={closeMobile}>
+            Services
+          </Link>
+          <button className="cf-btn cf-btn-cream cf-btn-lg cf-nav-mobile-cta" onClick={handleConsult}>
+            Book a consultation
+          </button>
+        </div>
+      </nav>
     </header>
   );
 }
